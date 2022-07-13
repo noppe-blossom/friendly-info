@@ -1,0 +1,129 @@
+Factory Details:
+  Rank                     primary + 11 (267)
+  Long-name                NVIDIA v4l2 video decoder
+  Klass                    Codec/Decoder/Video
+  Description              Decode video streams via V4L2 API
+  Author                   Nicolas Dufresne <nicolas.dufresne@collabora.com>, Viranjan Pagar <vpagar@nvidia.com>
+
+Plugin Details:
+  Name                     nvvideo4linux2
+  Description              Nvidia elements for Video 4 Linux
+  Filename                 /usr/lib/x86_64-linux-gnu/gstreamer-1.0/deepstream/libgstnvvideo4linux2.so
+  Version                  1.14.0
+  License                  LGPL
+  Source module            nvvideo4linux2
+  Binary package           nvvideo4linux2
+  Origin URL               http://nvidia.com/
+
+GObject
+ +----GInitiallyUnowned
+       +----GstObject
+             +----GstElement
+                   +----GstVideoDecoder
+                         +----GstNvV4l2VideoDec
+                               +----nvv4l2decoder
+
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      image/jpeg
+      video/x-h264
+          stream-format: { (string)byte-stream }
+              alignment: { (string)au }
+      video/x-h265
+          stream-format: { (string)byte-stream }
+              alignment: { (string)au }
+      video/mpeg
+            mpegversion: 4
+           systemstream: false
+                 parsed: true
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+      video/mpeg
+            mpegversion: [ 1, 2 ]
+           systemstream: false
+                 parsed: true
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+      video/x-divx
+            divxversion: [ 4, 5 ]
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+      video/x-vp8
+      video/x-vp9
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+  
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      video/x-raw(memory:NVMM)
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+
+Element has no clocking capabilities.
+Element has no URI handling capabilities.
+
+Pads:
+  SINK: 'sink'
+    Pad Template: 'sink'
+  SRC: 'src'
+    Pad Template: 'src'
+
+Element Properties:
+  capture-io-mode     : Capture I/O mode (matches src pad)
+                        flags: readable, writable
+                        Enum "GstNvV4l2IOMode" Default: 0, "auto"
+                           (0): auto             - GST_V4L2_IO_AUTO
+                           (2): mmap             - GST_V4L2_IO_MMAP
+                           (5): dmabuf-import    - GST_V4L2_IO_DMABUF_IMPORT
+  cudadec-memtype     : Set to specify memory type for cuda decoder buffers
+                        flags: readable, writable, changeable only in NULL or READY state
+                        Enum "CudaDecMemType" Default: 2, "memtype_unified"
+                           (0): memtype_device   - Memory type Device
+                           (1): memtype_pinned   - Memory type Host Pinned
+                           (2): memtype_unified  - Memory type Unified
+  device              : Device location
+                        flags: readable
+                        String. Default: "/dev/nvidia0"
+  device-fd           : File descriptor of the device
+                        flags: readable
+                        Integer. Range: -1 - 2147483647 Default: -1 
+  device-name         : Name of the device
+                        flags: readable
+                        String. Default: ""
+  drop-frame-interval : Interval to drop the frames,ex: value of 5 means every 5th frame will be given by decoder, rest all dropped
+                        flags: readable, writable, changeable only in NULL or READY state
+                        Unsigned Integer. Range: 0 - 30 Default: 0 
+  extra-controls      : Extra v4l2 controls (CIDs) for the device
+                        flags: readable, writable
+                        Boxed pointer of type "GstStructure"
+  gpu-id              : Set to GPU Device ID for decoder 
+                        flags: readable, writable, changeable only in NULL or READY state
+                        Unsigned Integer. Range: 0 - 4294967295 Default: 0 
+  low-latency-mode    : Set low latency mode for bitstreams having I and IPPP frames
+                        flags: readable, writable
+                        Boolean. Default: false
+  name                : The name of the object
+                        flags: readable, writable
+                        String. Default: "nvv4l2decoder0"
+  num-extra-surfaces  : Additional number of surfaces in addition to min decode surfaces given by the v4l2 driver
+                        flags: readable, writable, changeable only in NULL or READY state
+                        Unsigned Integer. Range: 0 - 24 Default: 0 
+  output-io-mode      : Output side I/O mode (matches sink pad)
+                        flags: readable, writable
+                        Enum "GstNvV4l2IOMode" Default: 0, "auto"
+                           (0): auto             - GST_V4L2_IO_AUTO
+                           (2): mmap             - GST_V4L2_IO_MMAP
+                           (5): dmabuf-import    - GST_V4L2_IO_DMABUF_IMPORT
+  parent              : The parent of the object
+                        flags: readable, writable
+                        Object of type "GstObject"
+  skip-frames         : Type of frames to skip during decoding
+                        flags: readable, writable, changeable in NULL, READY, PAUSED or PLAYING state
+                        Enum "SkipFrame" Default: 0, "decode_all"
+                           (0): decode_all       - Decode all frames
+                           (1): decode_non_ref   - Decode non-ref frames
+                           (2): decode_key       - decode key frames
